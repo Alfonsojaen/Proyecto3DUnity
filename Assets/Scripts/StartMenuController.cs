@@ -9,7 +9,8 @@ public class StartMenuController : MonoBehaviour
     public void OnStartClick()
     {
         SceneManager.LoadScene("Minigame");
-                Debug.Log("Entrado");
+        MusicManager.StopMusic();
+        MusicManager.PlayBackgroundMusic();
 
     }
     public void OnExitClick(){

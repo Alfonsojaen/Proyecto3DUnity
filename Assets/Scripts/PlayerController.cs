@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         {
             winImageObject.SetActive(true);
             SoundEffectManager.playGameWinSound();
+            MusicManager.PauseMusic();
         }
     }
 
@@ -68,6 +69,7 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
             finishImage.gameObject.SetActive(true);
             SoundEffectManager.playGameLostSound();
+            MusicManager.PauseMusic();
         }
 
         if (collision.gameObject.CompareTag("Suelo"))
