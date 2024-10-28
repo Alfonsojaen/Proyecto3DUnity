@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
         {
 
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            SoundEffectManager.playJumpSound();
         }
     }
 
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
         if (count >= 10)
         {
             winImageObject.SetActive(true);
+            SoundEffectManager.playGameWinSound();
         }
     }
 
@@ -64,8 +66,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemigo"))
         {
             Destroy(gameObject);
-
             finishImage.gameObject.SetActive(true);
+            SoundEffectManager.playGameLostSound();
         }
 
         if (collision.gameObject.CompareTag("Suelo"))
@@ -88,6 +90,7 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             count = count + 1;
+            SoundEffectManager.playGemCollectedSound();
             SetCountText();
         }
     }
