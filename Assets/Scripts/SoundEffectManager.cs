@@ -35,11 +35,13 @@ public class SoundEffectManager : MonoBehaviour
     public static void playGemCollectedSound() {
         audioSource.PlayOneShot(Instance.gemCollectedClip);
     }
-
     public static void playJumpSound() {
         audioSource.PlayOneShot(Instance.jumpClip);
     }
 
+    public static void playGame() {
+        audioSource.PlayOneShot(Instance.gameLostClip);
+    }
     public static void playGameLostSound() {
         audioSource.PlayOneShot(Instance.gameLostClip);
     }

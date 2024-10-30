@@ -1813,7 +1813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8300000, guid: caa38e3c7c0fedf4a8c400431476a38f, type: 3}
-  startMusic: {fileID: 0}
+  startMusic: {fileID: 8300000, guid: caa38e3c7c0fedf4a8c400431476a38f, type: 3}
 --- !u!82 &758553963
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4887,10 +4887,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1031017322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.587, y: 0.5983056}
-  m_AnchoredPosition: {x: -113.87515, y: -164.36569}
-  m_SizeDelta: {x: 2125.2825, y: 1111.2286}
+  m_AnchorMin: {x: 0.5, y: 0.5283056}
+  m_AnchorMax: {x: 0.586, y: 0.5983056}
+  m_AnchoredPosition: {x: -110.08, y: -49}
+  m_SizeDelta: {x: 1654.8118, y: 866.1693}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1885298840
 MonoBehaviour:

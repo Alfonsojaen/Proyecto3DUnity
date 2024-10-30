@@ -33,6 +33,7 @@ public class MusicManager : MonoBehaviour
         Instance.audioSource.clip = Instance.startMusic;
         Instance.audioSource.Play();
     }
+    
     public static void PauseMusic() {
         Instance.audioSource.Pause();
     }
