@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 0;
     public TextMeshProUGUI countText;
-    public GameObject winImageObject;
-    public GameObject finishImage;
+
+    public GameObject winImageObject; // Imagen de "Has ganado"
+    public GameObject finishImage; // Imagen de "Game Over"
+    public GameObject nivelImage; // Imagen de "Has pasado de nivel"
     public float jumpForce = 5f; 
 
     private Rigidbody rb;
     private int count;
     private float movementX;
     private float movementY;
-    private bool isGrounded;  
+    private bool isGrounded;
+    private bool gameOverSoundPlayed = false; 
+    private GameObject enemigo; 
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +30,14 @@ public class PlayerController : MonoBehaviour
         count = 0;
         SetCountText();
         winImageObject.SetActive(false);
+        finishImage.SetActive(false); 
+
+        enemigo = GameObject.FindGameObjectWithTag("Enemigo");
     }
 
     void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
-
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
@@ -39,7 +46,6 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             SoundEffectManager.playJumpSound();
         }
@@ -48,12 +54,22 @@ public class PlayerController : MonoBehaviour
     void SetCountText()
     {
         countText.text = "Contador: " + count.ToString();
-        if (count >= 10)
+        if (count >= 2)
         {
             winImageObject.SetActive(true);
             SoundEffectManager.playGameWinSound();
             MusicManager.PauseMusic();
+            
+            StopEnemyMovement();
+            
+            StartCoroutine(ShowWinImageAndChangeScene());
         }
+    }
+
+    private IEnumerator ShowWinImageAndChangeScene()
+    {
+        yield return new WaitForSeconds(3); 
+        SceneManager.LoadScene("Nivel 2"); 
     }
 
     void FixedUpdate()
@@ -66,16 +82,27 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemigo"))
         {
-            Destroy(gameObject);
-            finishImage.gameObject.SetActive(true);
-            SoundEffectManager.playGameLostSound();
-            MusicManager.PauseMusic();
+            if (!gameOverSoundPlayed)
+            {
+                gameOverSoundPlayed = true; 
+                finishImage.SetActive(true);
+                SoundEffectManager.playGameLostSound();
+                MusicManager.PauseMusic();
+            }
+            
+            StartCoroutine(RestartScene());
         }
 
         if (collision.gameObject.CompareTag("Suelo"))
         {
             isGrounded = true;  
         }
+    }
+
+    private IEnumerator RestartScene()
+    {
+        yield return new WaitForSeconds(3); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 
     private void OnCollisionExit(Collision collision)
@@ -91,9 +118,25 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Thor"))
         {
             other.gameObject.SetActive(false);
-            count = count + 1;
+            count++; 
             SoundEffectManager.playGemCollectedSound();
-            SetCountText();
+            SetCountText(); 
+        }
+    }
+    
+    private void StopEnemyMovement()
+    {
+        if (enemigo != null)
+        {
+            Rigidbody enemigoRb = enemigo.GetComponent<Rigidbody>();
+            if (enemigoRb != null)
+            {
+                enemigoRb.velocity = Vector3.zero; 
+                enemigoRb.angularVelocity = Vector3.zero; 
+                enemigoRb.constraints = RigidbodyConstraints.FreezeAll; 
+            }
+
+            enemigo.SetActive(false);
         }
     }
 }
