@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour
     public float speed = 0;
     public TextMeshProUGUI countText;
 
-    public GameObject winImageObject; // Imagen de "Has ganado"
-    public GameObject finishImage; // Imagen de "Game Over"
-    public GameObject nivelImage; // Imagen de "Has pasado de nivel"
-    public float jumpForce = 5f; 
+    public GameObject winImageObject;   
+    public GameObject finishImage;      
+    public GameObject nivelImage;       
+    public float jumpForce = 5f;
 
     private Rigidbody rb;
     private int count;
@@ -21,16 +21,17 @@ public class PlayerController : MonoBehaviour
     private float movementY;
     private bool isGrounded;
     private bool gameOverSoundPlayed = false; 
-    private GameObject enemigo; 
+    private GameObject enemigo;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         count = 0;
         SetCountText();
         winImageObject.SetActive(false);
-        finishImage.SetActive(false); 
+        finishImage.SetActive(false);
+        
+        if (nivelImage != null) nivelImage.SetActive(false);
 
         enemigo = GameObject.FindGameObjectWithTag("Enemigo");
     }
@@ -53,23 +54,44 @@ public class PlayerController : MonoBehaviour
 
     void SetCountText()
     {
-        countText.text = "Contador: " + count.ToString();
-        if (count >= 2)
+        countText.text = "Contador: " + count.ToString() +"/10";
+
+        if (count >= 10 && SceneManager.GetActiveScene().name == "Nivel 2")
         {
             winImageObject.SetActive(true);
             SoundEffectManager.playGameWinSound();
             MusicManager.PauseMusic();
             
             StopEnemyMovement();
-            
-            StartCoroutine(ShowWinImageAndChangeScene());
+
+            StartCoroutine(EndGameAfterWin());
+        }
+        else if (count >= 10 && SceneManager.GetActiveScene().name == "Minigame")
+        {
+            ShowTransitionImageAndChangeScene();
         }
     }
 
-    private IEnumerator ShowWinImageAndChangeScene()
+    private IEnumerator EndGameAfterWin()
     {
         yield return new WaitForSeconds(3); 
-        SceneManager.LoadScene("Nivel 2"); 
+        Application.Quit(); 
+    }
+
+    private void ShowTransitionImageAndChangeScene()
+    {
+        if (nivelImage != null)
+        {
+            nivelImage.SetActive(true);
+
+            StartCoroutine(ChangeSceneAfterDelay());
+        }
+    }
+
+    private IEnumerator ChangeSceneAfterDelay()
+    {
+        yield return new WaitForSeconds(3); 
+        SceneManager.LoadScene("Nivel 2");  
     }
 
     void FixedUpdate()
